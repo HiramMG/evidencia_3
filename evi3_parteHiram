@@ -1,0 +1,254 @@
+elif opcion_menu==2:
+            while True:
+                print("")
+                print("1. Agregar Cliente")
+                print("2. Consultas y Reportes")
+                print("3. Volver al Menu")
+                print("")
+                
+                opcion_clientes = int(input("Eliga una opcion:\n"))
+                print("")
+                if opcion_clientes==1:
+                    nombre = input("Ingresa el nombre del cliente: ")
+                    rfc = input("Ingresa el RFC del cliente: ")
+                    correo = input("Ingresa el correo electrónico del cliente: ")
+                    agregar_cliente(nombre, rfc, correo)
+                    print("")
+                    print("*DATOS INSERTADOS*")
+                    print("")
+                    
+                elif opcion_clientes==2:
+                    while True:
+                        print("1. Listado de clientes registrados")
+                        print("2. Busqueda por clave")
+                        print("3. Busqueda por nombre")
+                        print("4. Volver al menu de clientes")
+                        print("")
+                        
+                        opcion_clientes_2 = int(input("Eliga una opcion:\n"))
+                        print("")
+                        
+                        
+                        if opcion_clientes_2==1:
+                            while True:
+                                print("")
+                                print("1. Ordenado Por Clave")
+                                print("2. Ordenado Por Nombre")
+                                print("3. Volver al menu anterior")
+                                print("")
+                                opcion_clientes_3 = int(input("Eliga una opcion:\n"))
+                                if opcion_clientes_3==1:
+                                    try:
+                                        fecha_actual = datetime.date.today()
+                                        fecha_reporte = (f"{fecha_actual}.csv")
+                                        
+                                        with sqlite3.connect("Taller_Mecanico.db") as conn:
+                                            mi_cursor = conn.cursor()
+                                            mi_cursor.execute("select * from clientes \
+                                                            order by id;")
+                                            
+                                            registro= mi_cursor.fetchall()
+                                            print("Clientes Ordenados por ID")
+                                            print("")
+                                            print("Claves\tNombre\tRFC\t\tCorreo")
+                                            print("*" * 60)
+                                            if registro:
+                                                for clave, nombre, rfc, correo in registro:
+                                                    print(f"{clave:^6}{nombre}\t{rfc}\t{correo}")
+                                                    print("")
+                                    except Error as e:
+                                        print(e)
+                                            
+                                                    
+                                                    
+                                                
+                                
+                                                    
+                                    except Error as e:
+                                        print(e)
+                                    except Exception:
+                                        print(f"Se produjo el siguiente error: {sys.int_info()[0]}")
+                                        
+                                    else:
+                                        
+                                        opcion_decision = input("Desea exportar estos datos a CSV o Excel?(S/N)\n")
+                                        print("")
+                                        if opcion_decision.upper()=="S":
+                                            print("1. CSV")
+                                            print("2. Excel")
+                                            print("")
+                                            opcion_exportar = int(input("Eliga una opcion:\n"))
+                                            print("")
+                                            if opcion_exportar==1:
+                                                encabezados = ["CLAVE", "NOMBRE", "RFC", "CORREO"]
+                                                with open(fecha_reporte,"w", newline="") as reporte:
+                                                    grabador = csv.writer(reporte)
+                                                    grabador.writerow(encabezados)
+                                                    for datos in registro:
+                                                        grabador.writerow(datos)
+                                                    print("DATOS EXPORTADOS EXISTOSAMENTE\n")
+                                                    
+                                            elif opcion_exportar==2:
+                                                print("PROXIMAMANETE...")
+                                        elif opcion_decision.upper()=="N":
+                                            break
+                                                        
+                                                    
+                                elif opcion_clientes_3==2:
+                                    try:
+                                        fecha_actual = datetime.date.today()
+                                        fecha_reporte = (f"{fecha_actual}.csv")
+                                        with sqlite3.connect("Taller_Mecanico.db") as conn:
+                                            mi_cursor = conn.cursor()
+                                            mi_cursor.execute("select * from clientes \
+                                                            order by nombre;")
+                                            
+                                            registro= mi_cursor.fetchall()
+                                            print("Clientes Ordenados por ID")
+                                            print("")
+                                            print("Claves\tNombre\tRFC\t\tCorreo")
+                                            print("*" * 60)
+                                            if registro:
+                                                for clave, nombre, rfc, correo in registro:
+                                                    print(f"{clave:^6}{nombre}\t{rfc}\t{correo}")
+                                    except Error as e:
+                                        print(e)
+                                    except Exception:
+                                        print(f"Se produjo el siguiente error: {sys.int_info()[0]}")
+                                        
+                                    else:
+                                        opcion_decision = input("Desea exportar estos datos a CSV o Excel?(S/N)\n")
+                                        print("")
+                                        if opcion_decision.upper()=="S":
+                                            print("1. CSV")
+                                            print("2. Excel")
+                                            print("")
+                                            opcion_exportar = int(input("Eliga una opcion:\n"))
+                                            print("")
+                                            if opcion_exportar==1:
+                                                encabezados = ["CLAVE", "NOMBRE", "RFC", "CORREO"]
+                                                with open(fecha_reporte,"w", newline="") as reporte:
+                                                    grabador = csv.writer(reporte)
+                                                    grabador.writerow(encabezados)
+                                                    for datos in registro:
+                                                        grabador.writerow(datos)
+                                                    print("DATOS EXPORTADOS EXISTOSAMENTE\n")
+                                                    
+                                            elif opcion_exportar==2:
+                                                print("PROXIMAMANETE...")
+                                        elif opcion_decision.upper()=="N":
+                                            break
+                                        
+                                    
+                                        
+                                        
+                                elif opcion_clientes_3==3:
+                                    break
+                                
+                                
+                        elif opcion_clientes_2==2:
+                            clave_buscar=input("Ingrese la clave del cliente:\n")
+                            valores = {"clave": clave_buscar}
+                            try:
+                                fecha_actual = datetime.date.today()
+                                fecha_reporte = (f"{fecha_actual}.csv")
+                                with sqlite3.connect("Taller_Mecanico.db") as conn:
+                                    mi_cursor = conn.cursor()
+                                    mi_cursor.execute("SELECT * FROM clientes WHERE id = :clave", valores)
+                                    
+                                    registro = mi_cursor.fetchall()
+                                    
+                                    print("")
+                                    print("Claves\tNombre\tRFC\t\tCorreo")
+                                    print("*" * 60)
+                                    if registro:
+                                        for clave, nombre, rfc, correo in registro:
+                                            print(f"{clave:^6}{nombre}\t{rfc}\t{correo}")
+                                            print("")
+                                    else:
+                                        print(f"No se encontro ningun cliente con la clave: {clave_buscar}")
+                            except Error as e:
+                                print(e)
+                            except Exception:
+                                print(f"Se produjo el siguiente error: {sys.int_info()[0]}")
+                                print("")
+                                
+                            else:
+                                opcion_decision = input("Desea exportar estos datos a CSV o Excel?(S/N)\n")
+                                if opcion_decision.upper()=="S":
+                                    print("1. CSV")
+                                    print("2. Excel")
+                                    print("")
+                                    opcion_exportar = int(input("Eliga una opcion:\n"))
+                                    print("")
+                                    if opcion_exportar==1:
+                                        encabezados = ["CLAVE", "NOMBRE", "RFC", "CORREO"]
+                                        with open(fecha_reporte,"w", newline="") as reporte:
+                                            grabador = csv.writer(reporte)
+                                            grabador.writerow(encabezados)
+                                            for datos in registro:
+                                                grabador.writerow(datos)
+                                            print("DATOS EXPORTADOS EXISTOSAMENTE\n")
+                                                    
+                                    elif opcion_exportar==2:
+                                        print("PROXIMAMANETE...")
+                                elif opcion_decision.upper()=="N":
+                                    break
+                                    
+                               
+                            
+                                
+                        elif opcion_clientes_2==3:
+                            nombre_buscar=input("Ingrese el nombre del cliente:\n")
+                            valores = {"nombre": nombre_buscar}
+                            try:
+                                fecha_actual = datetime.date.today()
+                                fecha_reporte = (f"{fecha_actual}.csv")
+                                with sqlite3.connect("Taller_Mecanico.db") as conn:
+                                    mi_cursor = conn.cursor()
+                                    mi_cursor.execute("SELECT * FROM clientes WHERE nombre = :nombre", valores)
+                                    
+                                    registro = mi_cursor.fetchall()
+                                    
+                                    print("")
+                                    print("Claves\tNombre\tRFC\t\tCorreo")
+                                    print("*" * 60)
+                                    if registro:
+                                        for clave, nombre, rfc, correo in registro:
+                                            print(f"{clave:^6}{nombre}\t{rfc}\t{correo}")
+                                            print("")
+                                    else:
+                                        print(f"No se encontro ningun registro con el nombre: {nombre_buscar}")
+                            except Error as e:
+                                print(e)
+                            except Exception:
+                                print(f"Se produjo el siguiente error: {sys.int_info()[0]}")
+                                print("")
+                            else:
+                                opcion_decision = input("Desea exportar estos datos a CSV o Excel?(S/N)\n")
+                                if opcion_decision.upper()=="S":
+                                    print("1. CSV")
+                                    print("2. Excel")
+                                    print("")
+                                    opcion_exportar = int(input("Eliga una opcion:\n"))
+                                    print("")
+                                    if opcion_exportar==1:
+                                        encabezados = ["CLAVE", "NOMBRE", "RFC", "CORREO"]
+                                        with open(fecha_reporte,"w", newline="") as reporte:
+                                            grabador = csv.writer(reporte)
+                                            grabador.writerow(encabezados)
+                                            for datos in registro:
+                                                grabador.writerow(datos)
+                                            print("DATOS EXPORTADOS EXISTOSAMENTE\n")
+                                                    
+                                    elif opcion_exportar==2:
+                                        print("PROXIMAMANETE...")
+                                elif opcion_decision.upper()=="N":
+                                    break
+                                
+                        elif opcion_clientes_2==4:
+                            break
+                    
+                elif opcion_clientes==3:
+                    break
+            
